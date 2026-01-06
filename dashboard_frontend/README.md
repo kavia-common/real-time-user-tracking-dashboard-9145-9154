@@ -9,7 +9,25 @@ This React app renders a dashboard UI with:
 
 ## Theme
 
-Ocean Professional (primary `#2563EB`, secondary/success `#F59E0B`, error `#EF4444`, background `#f9fafb`, surface `#ffffff`, text `#111827`).
+Ocean Professional (primary `#2563EB`, secondary/amber `#F59E0B`, error `#EF4444`, background `#f9fafb`, surface `#ffffff`, text `#111827`).
+
+Theme tokens (colors/spacing/radius/shadows) are centralized in `src/theme.css` (CSS vars) and `src/theme.js` (JS tokens).
+
+## Accessibility & UX notes
+
+- Landmarks: `header` (banner), `nav` (primary), `main`, `aside`, `footer`.
+- Keyboard:
+  - Focus the Users list and use **↑/↓**, **Home/End** to change selection.
+  - Press **Enter/Space** to confirm selection.
+  - On mobile overlay, press **Escape** to close.
+- Visible focus rings are enabled via `:focus-visible`.
+- Panels reserve space with skeletons (no layout shift).
+
+## Responsive behavior
+
+- Desktop: three-column grid (sidebar / map / progress). Sidebar & progress panels are optionally resizable (CSS `resize`).
+- Tablet: progress panel stacks under sidebar.
+- Mobile: sidebar becomes an overlay, opened via the ☰ button in the top nav.
 
 ## Running
 
@@ -27,10 +45,11 @@ The app reads these optional variables:
 - `REACT_APP_BACKEND_URL` – backend base URL (future use)
 - `REACT_APP_WS_URL` – websocket URL (future use)
 - `REACT_APP_FEATURE_FLAGS` – feature flags to toggle behavior
+- `REACT_APP_NODE_ENV` – optional environment label badge (e.g., `development`, `production`)
 
 ### Toggle mock vs real data
 
-By default, the app runs **mock real-time simulation** (interval updates).  
+By default, the app runs **mock real-time simulation** (interval updates).
 To prepare for real data wiring, set feature flag `useRealData`.
 
 You can set `REACT_APP_FEATURE_FLAGS` as JSON:

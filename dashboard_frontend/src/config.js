@@ -29,26 +29,15 @@ export function getAppConfig() {
 
   const useRealData = Boolean(featureFlags.useRealData);
 
+  // Optional environment badge (requested). Do not introduce new env vars.
+  const environmentLabel = (process.env.REACT_APP_NODE_ENV || "").trim();
+
   return {
     apiBase,
     backendUrl,
     wsUrl,
     useRealData,
+    environmentLabel,
     appName: "OceanTrack Dashboard",
   };
 }
-
-export const THEME = {
-  colors: {
-    primary: "#2563EB",
-    secondary: "#F59E0B",
-    success: "#F59E0B",
-    error: "#EF4444",
-    background: "#f9fafb",
-    surface: "#ffffff",
-    text: "#111827",
-    border: "#E5E7EB",
-    mutedText: "#6B7280",
-  },
-  gradient: "linear-gradient(135deg, rgba(37,99,235,0.10), #f9fafb 55%)",
-};
