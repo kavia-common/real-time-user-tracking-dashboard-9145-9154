@@ -61,9 +61,16 @@ class MapErrorBoundary extends React.Component {
   }
 }
 
-const MemoizedLeafletMap = React.memo(function MemoizedLeafletMap({ center, users, selectedUser, shouldRecenter, onRecenterDone }) {
+const MemoizedLeafletMap = React.memo(function MemoizedLeafletMap({
+  center,
+  zoom,
+  users,
+  selectedUser,
+  shouldRecenter,
+  onRecenterDone,
+}) {
   return (
-    <MapContainer center={center} zoom={12} scrollWheelZoom className="mapRoot">
+    <MapContainer center={center} zoom={zoom} scrollWheelZoom className="mapRoot">
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -100,12 +107,25 @@ export default function MapView() {
   /** Main map area visualizing multiple users' current locations and paths. */
   const { users, selectedUser } = useTracking();
 
+  // Default view (when there is no user/selection available).
+  // If later overridden via config/env wiring, those overrides should replace these defaults.
+  const DEFAULT_CENTER = useMemo(() => [20.5937, 78.9629], []);
+  const DEFAULT_ZOOM = 5;
+
   const [shouldRecenter, setShouldRecenter] = useState(false);
 
   const center = useMemo(() => {
     const u = selectedUser || users[0];
-    if (!u) return [37.7749, -122.4194];
+    if (!u) return DEFAULT_CENTER;
     return [u.position.lat, u.position.lng];
+  }, [users, selectedUser, DEFAULT_CENTER]);
+
+  const zoom = useMemo(() => {
+    // When focusing on a specific user we rely on flyTo() (FitToSelection) to adjust zoom,
+    // but the initial map zoom should be India-friendly when no selection exists.
+    const u = selectedUser || users[0];
+    if (!u) return DEFAULT_ZOOM;
+    return 12;
   }, [users, selectedUser]);
 
   const isLoading = false; // reserved for future real-data wiring
@@ -153,6 +173,7 @@ export default function MapView() {
           ) : (
             <MemoizedLeafletMap
               center={center}
+              zoom={zoom}
               users={users}
               selectedUser={selectedUser}
               shouldRecenter={shouldRecenter}
