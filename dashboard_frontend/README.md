@@ -1,82 +1,53 @@
-# Lightweight React Template for KAVIA
+# Real-time User Tracking Dashboard (Frontend)
 
-This project provides a minimal React template with a clean, modern UI and minimal dependencies.
+This React app renders a dashboard UI with:
 
-## Features
+- Top navigation bar
+- Left sidebar listing users with statuses
+- Main map area (Leaflet via `react-leaflet`) showing multiple users (markers) + routes (polylines)
+- Right progress panel showing each user's route completion %
 
-- **Lightweight**: No heavy UI frameworks - uses only vanilla CSS and React
-- **Modern UI**: Clean, responsive design with KAVIA brand styling
-- **Fast**: Minimal dependencies for quick loading times
-- **Simple**: Easy to understand and modify
+## Theme
 
-## Getting Started
+Ocean Professional (primary `#2563EB`, secondary/success `#F59E0B`, error `#EF4444`, background `#f9fafb`, surface `#ffffff`, text `#111827`).
 
-In the project directory, you can run:
+## Running
 
-### `npm start`
-
-Runs the app in development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-### `npm test`
-
-Launches the test runner in interactive watch mode.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-## Customization
-
-### Colors
-
-The main brand colors are defined as CSS variables in `src/App.css`:
-
-```css
-:root {
-  --kavia-orange: #E87A41;
-  --kavia-dark: #1A1A1A;
-  --text-color: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
-}
+```bash
+npm start
 ```
 
-### Components
+Runs on port `3000` in the standard CRA dev server.
 
-This template uses pure HTML/CSS components instead of a UI framework. You can find component styles in `src/App.css`. 
+## Configuration (Environment Variables)
 
-Common components include:
-- Buttons (`.btn`, `.btn-large`)
-- Container (`.container`)
-- Navigation (`.navbar`)
-- Typography (`.title`, `.subtitle`, `.description`)
+The app reads these optional variables:
 
-## Learn More
+- `REACT_APP_API_BASE` – base URL for REST requests (future use)
+- `REACT_APP_BACKEND_URL` – backend base URL (future use)
+- `REACT_APP_WS_URL` – websocket URL (future use)
+- `REACT_APP_FEATURE_FLAGS` – feature flags to toggle behavior
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Toggle mock vs real data
 
-### Code Splitting
+By default, the app runs **mock real-time simulation** (interval updates).  
+To prepare for real data wiring, set feature flag `useRealData`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+You can set `REACT_APP_FEATURE_FLAGS` as JSON:
 
-### Analyzing the Bundle Size
+```bash
+REACT_APP_FEATURE_FLAGS={"useRealData":true}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Or as CSV:
 
-### Making a Progressive Web App
+```bash
+REACT_APP_FEATURE_FLAGS=useRealData
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+If `useRealData` is enabled, the mock simulator stops (you can then wire REST/WS fetching using the URLs above).
 
-### Advanced Configuration
+## Notes
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Leaflet map tiles are from OpenStreetMap.
+- Marker icons are loaded via unpkg CDN to avoid bundler path issues.
