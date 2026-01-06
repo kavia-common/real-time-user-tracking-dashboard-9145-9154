@@ -25,8 +25,9 @@ function computeProgress(routeIndex, routeLen) {
 }
 
 function buildMockUsers() {
-  // Around San Francisco for a pleasant default.
-  const base = { lat: 37.7749, lng: -122.4194 };
+  // Around India so markers are visible with the map's default India-centered view.
+  // (MapView defaults to ~[20.5937, 78.9629] zoom 5.)
+  const base = { lat: 28.6139, lng: 77.209 };
   const routes = [
     Array.from({ length: 30 }).map((_, i) => [base.lat + 0.015 * (i / 29), base.lng + 0.02 * Math.sin(i / 6)]),
     Array.from({ length: 26 }).map((_, i) => [base.lat - 0.01 * (i / 25), base.lng + 0.018 * (i / 25)]),
