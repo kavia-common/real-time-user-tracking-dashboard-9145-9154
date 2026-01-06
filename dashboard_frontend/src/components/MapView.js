@@ -18,18 +18,28 @@ L.Icon.Default.mergeOptions({
 function FitToSelection({ selectedUser, shouldRecenter, onRecenterDone }) {
   const map = useMap();
 
-  useEffect(() => {
-    if (!selectedUser) return;
-    const { lat, lng } = selectedUser.position;
-    map.flyTo([lat, lng], Math.max(map.getZoom(), 13), { duration: 0.9 });
-  }, [map, selectedUser]);
+  // Track selection changes by id so we don't "auto-follow" a moving user
+  // (selectedUser object/position changes frequently in the simulation).
+  const selectedUserId = selectedUser?.id || null;
 
   useEffect(() => {
-    if (!shouldRecenter || !selectedUser) return;
+    if (!selectedUserId) return;
+    if (!selectedUser?.position) return;
+
+    const { lat, lng } = selectedUser.position;
+    map.flyTo([lat, lng], Math.max(map.getZoom(), 13), { duration: 0.9 });
+    // Intentionally NOT depending on selectedUser.position to avoid re-flyTo on every tick.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map, selectedUserId]);
+
+  useEffect(() => {
+    if (!shouldRecenter || !selectedUserId) return;
+    if (!selectedUser?.position) return;
+
     const { lat, lng } = selectedUser.position;
     map.flyTo([lat, lng], Math.max(map.getZoom(), 13), { duration: 0.6 });
     onRecenterDone?.();
-  }, [map, shouldRecenter, selectedUser, onRecenterDone]);
+  }, [map, shouldRecenter, selectedUserId, selectedUser, onRecenterDone]);
 
   return null;
 }
