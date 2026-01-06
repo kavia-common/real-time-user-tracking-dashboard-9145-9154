@@ -12,7 +12,10 @@ test("renders key landmarks and components", () => {
 
   // Map panel header
   expect(screen.getByText(/Live Map/i)).toBeInTheDocument();
-  expect(screen.getByText(/OceanTrack/i)).toBeInTheDocument();
+
+  // "OceanTrack" appears both in the header brand and footer copy, so query a unique element.
+  const topNav = screen.getByRole("banner", { name: /top navigation/i });
+  expect(topNav.querySelector(".brandTitle")).toHaveTextContent(/OceanTrack/i);
 });
 
 test("sidebar supports keyboard navigation (arrow keys + enter)", () => {

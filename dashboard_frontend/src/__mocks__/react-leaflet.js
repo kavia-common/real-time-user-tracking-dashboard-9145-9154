@@ -7,11 +7,19 @@ const React = require("react");
  */
 
 function createPassthroughComponent(displayName) {
-  const Comp = ({ children, ...props }) => (
-    <div data-testid={displayName} {...props}>
-      {children}
-    </div>
-  );
+  const Comp = ({ children, ...props }) => {
+    // Filter react-leaflet-specific props so they don't get forwarded to a DOM node in tests.
+    // This prevents React warnings like "React does not recognize the 'pathOptions' prop..."
+    // without changing runtime behavior (these are only used by the real react-leaflet components).
+    // eslint-disable-next-line no-unused-vars
+    const { pathOptions, scrollWheelZoom, permanent, ...domProps } = props;
+
+    return (
+      <div data-testid={displayName} {...domProps}>
+        {children}
+      </div>
+    );
+  };
   Comp.displayName = displayName;
   return Comp;
 }

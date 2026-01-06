@@ -37,16 +37,24 @@ if (!window.matchMedia) {
  * CRA uses fake timers in some environments; we defensively clear and restore.
  */
 afterEach(() => {
-  try {
-    jest.runOnlyPendingTimers();
-  } catch {
-    // ignore if real timers are active
+  // Only attempt to advance timers if this test enabled fake timers.
+  // jest.isMockFunction(setTimeout) is a reliable signal that Jest has replaced the timers API.
+  const usingFakeTimers = typeof setTimeout === "function" && jest.isMockFunction(setTimeout);
+
+  if (usingFakeTimers) {
+    try {
+      jest.runOnlyPendingTimers();
+    } catch {
+      // ignore
+    }
   }
+
   try {
     jest.clearAllTimers();
   } catch {
     // ignore if real timers are active
   }
+
   try {
     jest.useRealTimers();
   } catch {
