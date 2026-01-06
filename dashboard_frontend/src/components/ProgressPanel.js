@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { useTracking } from "../state/TrackingContext";
 import { EmptyState, LoadingSkeleton } from "./UIStates";
+import { formatCoordinates, formatNumber } from "../utils/formatting";
 
 // PUBLIC_INTERFACE
 export default function ProgressPanel() {
@@ -29,16 +30,20 @@ export default function ProgressPanel() {
         <EmptyState title="No progress" message="No users are available to show progress." />
       ) : (
         <div className="progressList">
-          {sorted.map((u) => (
-            <div className="progressRow" key={u.id}>
-              <div className="progressRow__top">
-                <div className="progressRow__name" title={u.name}>
-                  {u.name}
+          {sorted.map((u) => {
+            const pctText = `${formatNumber(u.progress)}%`;
+            const coordsText = formatCoordinates(u.position.lat, u.position.lng, 4);
+
+            return (
+              <div className="progressRow" key={u.id}>
+                <div className="progressRow__top">
+                  <div className="progressRow__name" title={u.name}>
+                    {u.name}
+                  </div>
+                  <div className="progressRow__pct" aria-label={`${pctText} complete`}>
+                    {pctText}
+                  </div>
                 </div>
-                <div className="progressRow__pct" aria-label={`${u.progress}% complete`}>
-                  {u.progress}%
-                </div>
-              </div>
 
               <div
                 className="progressBar"
@@ -58,12 +63,11 @@ export default function ProgressPanel() {
               </div>
 
               <div className="progressRow__meta">
-                <span className="mono">
-                  {u.position.lat.toFixed(4)}, {u.position.lng.toFixed(4)}
-                </span>
+                <span className="mono">{coordsText}</span>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </aside>

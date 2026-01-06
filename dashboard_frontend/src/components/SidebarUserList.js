@@ -2,15 +2,7 @@ import React, { useCallback, useMemo, useRef } from "react";
 import { FixedSizeList as VirtualList } from "react-window";
 import { useTracking } from "../state/TrackingContext";
 import { EmptyState } from "./UIStates";
-
-function formatRelativeTime(ts) {
-  const delta = Date.now() - ts;
-  const s = Math.floor(delta / 1000);
-  if (s < 5) return "just now";
-  if (s < 60) return `${s}s ago`;
-  const m = Math.floor(s / 60);
-  return `${m}m ago`;
-}
+import { formatNumber, formatRelativeTimeShort } from "../utils/formatting";
 
 function statusMeta(status) {
   switch (status) {
@@ -116,6 +108,9 @@ export default function SidebarUserList({ isOverlayOpen, onRequestCloseOverlay }
       const meta = statusMeta(u.status);
       const selected = u.id === selectedUserId;
 
+      const progressPctText = `${formatNumber(u.progress)}%`;
+      const relTime = formatRelativeTimeShort(u.lastUpdatedAt);
+
       return (
         <div style={style}>
           <button
@@ -137,13 +132,13 @@ export default function SidebarUserList({ isOverlayOpen, onRequestCloseOverlay }
             <div className="userRow__main">
               <div className="userRow__top">
                 <div className="userRow__name">{u.name}</div>
-                <div className="userRow__pct">{u.progress}%</div>
+                <div className="userRow__pct">{progressPctText}</div>
               </div>
               <div className="userRow__bottom">
                 <span className={meta.dotClass} aria-hidden="true" />
                 <span className={meta.badgeClass}>{meta.label}</span>
-                <span className="userRow__time" aria-label={`Updated ${formatRelativeTime(u.lastUpdatedAt)}`}>
-                  {formatRelativeTime(u.lastUpdatedAt)}
+                <span className="userRow__time" aria-label={`Updated ${relTime}`}>
+                  {relTime}
                 </span>
               </div>
             </div>

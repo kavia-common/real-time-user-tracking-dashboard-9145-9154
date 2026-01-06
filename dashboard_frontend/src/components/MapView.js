@@ -3,6 +3,7 @@ import { MapContainer, Marker, Polyline, TileLayer, Tooltip, useMap } from "reac
 import L from "leaflet";
 import { useTracking } from "../state/TrackingContext";
 import { ErrorState, LoadingSkeleton } from "./UIStates";
+import { formatDateTime, formatNumber } from "../utils/formatting";
 
 import "leaflet/dist/leaflet.css";
 
@@ -92,7 +93,13 @@ const MemoizedLeafletMap = React.memo(function MemoizedLeafletMap({
             <Tooltip direction="top" offset={[0, -6]} opacity={1} permanent={false}>
               <div className="mapTooltip">
                 <div className="mapTooltip__name">{u.name}</div>
-                <div className="mapTooltip__meta">{u.progress}% complete</div>
+                <div className="mapTooltip__meta">
+                  {`${formatNumber(u.progress)}% complete`}
+                  {" · "}
+                  <span title="Timestamp shown in Asia/Kolkata by default">
+                    Updated {formatDateTime(u.lastUpdatedAt, { hour: "2-digit", minute: "2-digit" })}
+                  </span>
+                </div>
               </div>
             </Tooltip>
           </Marker>
